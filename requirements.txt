@@ -1,0 +1,27 @@
+# Chatterbox TTS Requirements for M1 MacBook Air
+# Created by Claude for Michael Koker
+
+# Core TTS package
+chatterbox-tts
+
+# PyTorch with MPS support (install via conda)
+# torch
+# torchaudio
+
+# Web server dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+
+# Audio processing
+librosa>=0.10.0
+soundfile>=0.12.0
+numpy>=1.24.0
+scipy>=1.11.0
+
+# System monitoring
+psutil>=5.9.0
+
+# Optional: Jupyter for interactive development
+# jupyter
+# matplotlib

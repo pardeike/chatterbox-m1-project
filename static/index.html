@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍎 Chatterbox TTS - M1 MacBook Air</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #007AFF;
+        }
+        
+        .section h3 {
+            color: #007AFF;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            margin: 10px 0;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+        }
+        
+        .slider-value {
+            min-width: 50px;
+            text-align: center;
+            font-weight: bold;
+            color: #007AFF;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #007AFF, #0056CC);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 122, 255, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .secondary-btn {
+            background: linear-gradient(135deg, #6c757d, #545a61);
+        }
+        
+        .secondary-btn:hover {
+            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #e8f5e8;
+            border-left: 5px solid #28a745;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .loading {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        audio {
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        .download-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px 0;
+            transition: background 0.3s ease;
+        }
+        
+        .download-link:hover {
+            background: #218838;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .status-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .status-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .status-value {
+            font-size: 18px;
+            color: #007AFF;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍎 Chatterbox TTS - M1 MacBook Air</h1>
+        
+        <div class="section">
+            <h3>🎙️ Text-to-Speech Generation</h3>
+            <form id="ttsForm">
+                <textarea id="text" placeholder="Enter text to synthesize (max 1000 characters)..." required></textarea>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="language">Language:</label>
+                        <select id="language">
+                            <option value="en">🇺🇸 English</option>
+                            <option value="es">🇪🇸 Spanish</option>
+                            <option value="fr">🇫🇷 French</option>
+                            <option value="de">🇩🇪 German</option>
+                            <option value="zh">🇨🇳 Chinese</option>
+                            <option value="ja">🇯🇵 Japanese</option>
+                            <option value="ko">🇰🇷 Korean</option>
+                            <option value="it">🇮🇹 Italian</option>
+                            <option value="pt">🇵🇹 Portuguese</option>
+                            <option value="ru">🇷🇺 Russian</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reference_audio">Reference Audio (Voice Cloning):</label>
+                        <input type="file" id="reference_audio" accept="audio/*">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exaggeration">Emotion/Exaggeration:</label>
+                        <div class="slider-container">
+                            <input type="range" id="exaggeration" min="0" max="1" step="0.1" value="0.5">
+                            <span class="slider-value" id="exaggerationValue">0.5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cfg_weight">Speech Speed Control:</label>
+                        <div class="slider-container">
+                            <input type="range" id="cfg_weight" min="0" max="1" step="0.1" value="0.5">
+                            <span class="slider-value" id="cfgWeightValue">0.5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="temperature">Creativity:</label>
+                        <div class="slider-container">
+                            <input type="range" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7">
+                            <span class="slider-value" id="temperatureValue">0.7</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="speed_factor">Speed Factor:</label>
+                        <div class="slider-container">
+                            <input type="range" id="speed_factor" min="0.5" max="2.0" step="0.1" value="1.0">
+                            <span class="slider-value" id="speedFactorValue">1.0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit">🎙️ Generate Speech</button>
+                <button type="button" class="secondary-btn" onclick="clearCache()">🧹 Clear Cache</button>
+            </form>
+            
+            <div id="result"></div>
+        </div>
+        
+        <div class="section">
+            <h3>📊 System Status</h3>
+            <div id="status" class="status-grid">Loading system status...</div>
+            <button class="secondary-btn" onclick="updateStatus()">🔄 Refresh Status</button>
+        </div>
+        
+        <div class="section">
+            <h3>💡 Tips for M1 MacBook Air</h3>
+            <ul style="line-height: 1.8; padding-left: 20px;">
+                <li><strong>Performance:</strong> Keep your MacBook plugged in for sustained performance</li>
+                <li><strong>Memory:</strong> Close other memory-intensive applications while generating</li>
+                <li><strong>Text Length:</strong> Shorter texts generate faster and use less memory</li>
+                <li><strong>Voice Cloning:</strong> Use 10-30 second reference audio clips for best results</li>
+                <li><strong>Thermal:</strong> Use a laptop stand for better airflow during long sessions</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Update slider values in real-time
+        const sliders = ['exaggeration', 'cfg_weight', 'temperature', 'speed_factor'];
+        sliders.forEach(slider => {
+            const element = document.getElementById(slider);
+            const valueElement = document.getElementById(slider + 'Value');
+            
+            element.oninput = function() {
+                valueElement.textContent = this.value;
+            }
+        });
+        
+        // Handle form submission
+        document.getElementById('ttsForm').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('text', document.getElementById('text').value);
+            formData.append('language', document.getElementById('language').value);
+            formData.append('exaggeration', document.getElementById('exaggeration').value);
+            formData.append('cfg_weight', document.getElementById('cfg_weight').value);
+            formData.append('temperature', document.getElementById('temperature').value);
+            formData.append('speed_factor', document.getElementById('speed_factor').value);
+            
+            const audioFile = document.getElementById('reference_audio').files[0];
+            if (audioFile) {
+                formData.append('reference_audio', audioFile);
+            }
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="loading">🔄 Generating audio... This may take a moment on first run.</div>';
+            
+            try {
+                const response = await fetch('/synthesize', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = URL.createObjectURL(blob);
+                    
+                    const download = document.createElement('a');
+                    download.href = audio.src;
+                    download.download = 'chatterbox_generated.wav';
+                    download.className = 'download-link';
+                    download.innerHTML = '📥 Download Audio';
+                    
+                    resultDiv.innerHTML = '';
+                    resultDiv.className = 'result';
+                    
+                    const successMsg = document.createElement('div');
+                    successMsg.innerHTML = '✅ Audio generated successfully!';
+                    successMsg.style.marginBottom = '15px';
+                    
+                    resultDiv.appendChild(successMsg);
+                    resultDiv.appendChild(audio);
+                    resultDiv.appendChild(document.createElement('br'));
+                    resultDiv.appendChild(download);
+                } else {
+                    const errorText = await response.text();
+                    resultDiv.innerHTML = `<div class="result error">❌ Error: ${errorText}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result error">❌ Network Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Status updates
+        async function updateStatus() {
+            try {
+                const response = await fetch('/health');
+                const status = await response.json();
+                
+                document.getElementById('status').innerHTML = `
+                    <div class="status-item">
+                        <div class="status-label">Device</div>
+                        <div class="status-value">${status.device.toUpperCase()}</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">MPS Available</div>
+                        <div class="status-value">${status.mps_available ? '✅ Yes' : '❌ No'}</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Memory Usage</div>
+                        <div class="status-value">${status.memory_usage}</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">CPU Usage</div>
+                        <div class="status-value">${status.cpu_usage}</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">English Model</div>
+                        <div class="status-value">${status.models_loaded.english ? '✅ Loaded' : '⏳ Not Loaded'}</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Multilingual Model</div>
+                        <div class="status-value">${status.models_loaded.multilingual ? '✅ Loaded' : '⏳ Not Loaded'}</div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('status').innerHTML = '<div class="result error">❌ Error loading status</div>';
+            }
+        }
+        
+        async function clearCache() {
+            try {
+                const response = await fetch('/clear_cache', {method: 'POST'});
+                if (response.ok) {
+                    alert('✅ Model cache cleared! Memory freed.');
+                    updateStatus();
+                } else {
+                    alert('❌ Error clearing cache');
+                }
+            } catch (error) {
+                alert('❌ Network error clearing cache');
+            }
+        }
+        
+        // Initial status load
+        updateStatus();
+        
+        // Auto-refresh status every 30 seconds
+        setInterval(updateStatus, 30000);
+    </script>
+</body>
+</html>

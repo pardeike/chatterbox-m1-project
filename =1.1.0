@@ -1,0 +1,6 @@
+Collecting brotli
+  Downloading Brotli-1.1.0-cp311-cp311-macosx_10_9_universal2.whl.metadata (5.5 kB)
+Downloading Brotli-1.1.0-cp311-cp311-macosx_10_9_universal2.whl (873 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 873.1/873.1 kB 19.1 MB/s  0:00:00
+Installing collected packages: brotli
+Successfully installed brotli-1.1.0
