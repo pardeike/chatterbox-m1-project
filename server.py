@@ -23,7 +23,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def validate_environment():
-    """Validate PyTorch/TorchVision compatibility before starting server"""
+    """
+    Validate PyTorch/TorchVision compatibility before starting server.
+    
+    Note: torchvision is imported inside this function (not at module level) intentionally.
+    This allows us to catch and report import errors gracefully with helpful messages,
+    rather than having the server fail to start with no explanation.
+    """
     try:
         import torchvision
         import torchvision.ops
@@ -102,6 +108,8 @@ async def get_model(multilingual=False):
             logger.info(f"{cache_key.title()} model loaded")
         except Exception as e:
             error_msg = str(e)
+            # String matching is appropriate here - we're looking for the specific
+            # "operator torchvision::nms does not exist" error from transformers/torch
             if "torchvision::nms" in error_msg or "does not exist" in error_msg:
                 logger.error("❌ Model loading failed due to PyTorch/TorchVision compatibility issue")
                 logger.error("🔧 Run './definitive_fix.sh' to fix this issue")
