@@ -85,6 +85,7 @@ logs/
 tmp/
 temp/
 *.tmp
+test_validation.py
 
 # OS files
 Thumbs.db
