@@ -4,9 +4,15 @@
 # Core TTS package
 chatterbox-tts
 
-# PyTorch with MPS support (install via conda)
-# torch
-# torchaudio
+# PyTorch with MPS support
+# Install via pip for M1 compatibility:
+# pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cpu
+torch==2.4.1
+torchvision==0.19.1
+torchaudio==2.4.1
+
+# Transformers (pinned for compatibility)
+transformers==4.35.0
 
 # Web server dependencies
 fastapi>=0.104.0
