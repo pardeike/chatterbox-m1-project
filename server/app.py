@@ -284,15 +284,28 @@ async def root():
                     <label for="language">Language:</label>
                     <select id="language">
                         <option value="en">🇺🇸 English</option>
-                        <option value="es">🇪🇸 Spanish</option>
+                        <option value="ar">🇸🇦 Arabic</option>
+                        <option value="zh">🇨🇳 Chinese</option>
+                        <option value="da">🇩🇰 Danish</option>
+                        <option value="nl">🇳🇱 Dutch</option>
+                        <option value="fi">🇫🇮 Finnish</option>
                         <option value="fr">🇫🇷 French</option>
                         <option value="de">🇩🇪 German</option>
-                        <option value="zh">🇨🇳 Chinese</option>
+                        <option value="el">🇬🇷 Greek</option>
+                        <option value="he">🇮🇱 Hebrew</option>
+                        <option value="hi">🇮🇳 Hindi</option>
+                        <option value="it">🇮🇹 Italian</option>
                         <option value="ja">🇯🇵 Japanese</option>
                         <option value="ko">🇰🇷 Korean</option>
-                        <option value="it">🇮🇹 Italian</option>
+                        <option value="ms">🇲🇾 Malay</option>
+                        <option value="no">🇳🇴 Norwegian</option>
+                        <option value="pl">🇵🇱 Polish</option>
                         <option value="pt">🇵🇹 Portuguese</option>
                         <option value="ru">🇷🇺 Russian</option>
+                        <option value="es">🇪🇸 Spanish</option>
+                        <option value="sv">🇸🇪 Swedish</option>
+                        <option value="sw">🇹🇿 Swahili</option>
+                        <option value="tr">🇹🇷 Turkish</option>
                     </select>
                 </div>
                 
@@ -612,8 +625,8 @@ async def api_info():
             "Memory Optimization"
         ],
         "supported_languages": [
-            "en", "es", "fr", "de", "zh", "ja", "ko", "it", "pt", "ru",
-            "ar", "da", "el", "fi", "he", "hi", "ms", "nl", "no", "pl", "sv", "sw", "tr"
+            "ar", "da", "de", "el", "en", "es", "fi", "fr", "he", "hi",
+            "it", "ja", "ko", "ms", "nl", "no", "pl", "pt", "ru", "sv", "sw", "tr", "zh"
         ]
     }
 
