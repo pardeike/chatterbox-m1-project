@@ -5,8 +5,9 @@
 chatterbox-tts
 
 # PyTorch with MPS support
-# Install via pip for M1 compatibility:
-# pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cpu
+# Compatible versions for M1 MacBook Air
+# These can be installed via: pip install -r requirements.txt
+# Or with conda using the setup scripts
 torch==2.4.1
 torchvision==0.19.1
 torchaudio==2.4.1

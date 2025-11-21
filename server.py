@@ -13,10 +13,10 @@ import torch
 import uvicorn
 import io
 import os
+import sys
 import tempfile
 from pathlib import Path
 import logging
-import sys
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -28,7 +28,8 @@ def validate_environment():
         import torchvision
         import torchvision.ops
         
-        # Test the problematic NMS operation
+        # Test the problematic NMS operation with sample data
+        # These values are minimal test cases: two bounding boxes with scores
         boxes = torch.tensor([[0, 0, 1, 1], [0.5, 0.5, 1.5, 1.5]], dtype=torch.float32)
         scores = torch.tensor([0.9, 0.8], dtype=torch.float32)
         torchvision.ops.nms(boxes, scores, 0.5)
