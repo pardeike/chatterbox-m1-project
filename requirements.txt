@@ -4,9 +4,16 @@
 # Core TTS package
 chatterbox-tts
 
-# PyTorch with MPS support (install via conda)
-# torch
-# torchaudio
+# PyTorch with MPS support
+# Compatible versions for M1 MacBook Air
+# These can be installed via: pip install -r requirements.txt
+# Or with conda using the setup scripts
+torch==2.4.1
+torchvision==0.19.1
+torchaudio==2.4.1
+
+# Transformers (pinned for compatibility)
+transformers==4.35.0
 
 # Web server dependencies
 fastapi>=0.104.0

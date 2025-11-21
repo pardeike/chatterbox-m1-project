@@ -236,10 +236,11 @@ See [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md) for more examples.
 ### Common Issues
 
 **Issue**: `operator torchvision::nms does not exist`  
-**Fix**: Run `./definitive_fix.sh`
+**Fix**: Run `./definitive_fix.sh`  
+**Note**: The server now validates your environment on startup and will provide fix instructions if this issue is detected.
 
 **Issue**: `rope_scaling` configuration error  
-**Fix**: Run `pip install transformers==4.46.3 --force-reinstall`
+**Fix**: Run `pip install transformers==4.35.0 --force-reinstall`
 
 **Issue**: MPS operation not supported  
 **Fix**: Enable fallback with `export PYTORCH_ENABLE_MPS_FALLBACK=1`

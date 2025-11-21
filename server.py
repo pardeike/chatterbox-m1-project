@@ -13,6 +13,7 @@ import torch
 import uvicorn
 import io
 import os
+import sys
 import tempfile
 from pathlib import Path
 import logging
@@ -20,6 +21,49 @@ import logging
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def validate_environment():
+    """
+    Validate PyTorch/TorchVision compatibility before starting server.
+    
+    Note: torchvision is imported inside this function (not at module level) intentionally.
+    This allows us to catch and report import errors gracefully with helpful messages,
+    rather than having the server fail to start with no explanation.
+    """
+    try:
+        import torchvision
+        import torchvision.ops
+        
+        # Test the problematic NMS operation with sample data
+        # These values are minimal test cases: two bounding boxes with scores
+        boxes = torch.tensor([[0, 0, 1, 1], [0.5, 0.5, 1.5, 1.5]], dtype=torch.float32)
+        scores = torch.tensor([0.9, 0.8], dtype=torch.float32)
+        torchvision.ops.nms(boxes, scores, 0.5)
+        
+        logger.info(f"✅ Environment validation passed - PyTorch {torch.__version__}, TorchVision {torchvision.__version__}")
+        return True
+    except Exception as e:
+        logger.error("❌ Environment validation failed!")
+        logger.error(f"Error: {str(e)}")
+        logger.error("")
+        logger.error("This is a PyTorch/TorchVision compatibility issue on M1 MacBook Air.")
+        logger.error("")
+        logger.error("🔧 TO FIX THIS ISSUE, run one of these commands:")
+        logger.error("")
+        logger.error("   Option 1 (Recommended):")
+        logger.error("   ./definitive_fix.sh")
+        logger.error("")
+        logger.error("   Option 2 (Alternative):")
+        logger.error("   ./fix_pytorch.sh")
+        logger.error("")
+        logger.error("   Option 3 (Manual):")
+        logger.error("   conda activate chatterbox")
+        logger.error("   pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cpu")
+        logger.error("   pip install transformers==4.35.0 --force-reinstall")
+        logger.error("")
+        logger.error("After running the fix, restart the server.")
+        logger.error("")
+        return False
 
 app = FastAPI(title="Chatterbox TTS Server (M1 Optimized)", version="1.0.0")
 
@@ -52,15 +96,30 @@ async def get_model(multilingual=False):
     if cache_key not in cache:
         logger.info(f"Loading {cache_key} model...")
         
-        if multilingual:
-            from chatterbox.mtl_tts import ChatterboxMultilingualTTS
-            model = ChatterboxMultilingualTTS.from_pretrained(device=get_device())
-        else:
-            from chatterbox.tts import ChatterboxTTS
-            model = ChatterboxTTS.from_pretrained(device=get_device())
-        
-        cache[cache_key] = model
-        logger.info(f"{cache_key.title()} model loaded")
+        try:
+            if multilingual:
+                from chatterbox.mtl_tts import ChatterboxMultilingualTTS
+                model = ChatterboxMultilingualTTS.from_pretrained(device=get_device())
+            else:
+                from chatterbox.tts import ChatterboxTTS
+                model = ChatterboxTTS.from_pretrained(device=get_device())
+            
+            cache[cache_key] = model
+            logger.info(f"{cache_key.title()} model loaded")
+        except Exception as e:
+            error_msg = str(e)
+            # String matching is appropriate here - we're looking for the specific
+            # "operator torchvision::nms does not exist" error from transformers/torch
+            if "torchvision::nms" in error_msg or "does not exist" in error_msg:
+                logger.error("❌ Model loading failed due to PyTorch/TorchVision compatibility issue")
+                logger.error("🔧 Run './definitive_fix.sh' to fix this issue")
+                raise RuntimeError(
+                    "PyTorch/TorchVision compatibility error. "
+                    "Please run './definitive_fix.sh' to fix the environment. "
+                    "See PYTORCH_FIX.md for more details."
+                ) from e
+            else:
+                raise
     
     return cache[cache_key]
 
@@ -194,6 +253,11 @@ async def clear_model_cache():
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":
+    # Validate environment before starting
+    if not validate_environment():
+        logger.error("Server startup aborted due to environment validation failure")
+        sys.exit(1)
+    
     # Create static directory if it doesn't exist
     os.makedirs("static", exist_ok=True)
     

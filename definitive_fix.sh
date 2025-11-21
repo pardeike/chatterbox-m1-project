@@ -66,7 +66,7 @@ except Exception as e:
 
 echo ""
 echo "📦 Step 4: Adjusting other dependencies..."
-# Sometimes we need to downgrade transformers for compatibility
+# Use compatible transformers version
 pip install transformers==4.35.0 --force-reinstall
 
 echo ""
